@@ -5,6 +5,8 @@ const CMD_APPLY = 0x01
 const CMD_SET = 0x02
 const CMD_FILL = 0x03
 const CMD_OFF = 0x04
+const CMD_ON_PROC = 0x05
+const CMD_OFF_PROC = 0x06
 
 const RES_CONN_ACK = 0x01
 const RES_APPLY_ACK = 0x02
@@ -45,6 +47,18 @@ class Protocol {
     return buffer
   }
 
+  static onProcedure (buffer, offset) {
+    buffer.writeUInt8(CMD_ON_PROC, offset)
+    buffer.fill(0, offset + 1, offset + SIZE_OUT_FRAME)
+    return buffer
+  }
+
+  static offProcedure (buffer, offset) {
+    buffer.writeUInt8(CMD_OFF_PROC, offset)
+    buffer.fill(0, offset + 1, offset + SIZE_OUT_FRAME)
+    return buffer
+  }
+
   static decodeFrame (frame) {
     const msg = frame.readUInt8(0)
     switch (msg) {
@@ -79,6 +93,8 @@ Protocol.CMD_SET = CMD_SET
 Protocol.CMD_APPLY = CMD_APPLY
 Protocol.CMD_FILL = CMD_FILL
 Protocol.CMD_OFF = CMD_OFF
+Protocol.CMD_ON_PROC = CMD_ON_PROC
+Protocol.CMD_OFF_PROC = CMD_OFF_PROC
 
 Protocol.RES_CONN_ACK = RES_CONN_ACK
 Protocol.RES_APPLY_ACK = RES_APPLY_ACK

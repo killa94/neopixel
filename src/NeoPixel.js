@@ -90,7 +90,6 @@ class NeoPixel extends EventEmitter {
         blue || b || 0,
         white || w || 0
       )
-      console.log(Protocol.outboundFrameSize())
       Protocol.apply(buffer, Protocol.outboundFrameSize())
       this.cbs.push({ time: Date.now(), ack: 'apply', resolve, reject })
       this.transport.write(buffer)
@@ -101,6 +100,28 @@ class NeoPixel extends EventEmitter {
     return new Promise((resolve, reject) => {
       const buffer = Protocol.createOutboundFrame(2)
       Protocol.off(buffer, 0)
+      Protocol.apply(buffer, Protocol.outboundFrameSize())
+
+      this.cbs.push({ time: Date.now(), ack: 'apply', resolve, reject })
+      this.transport.write(buffer)
+    })
+  }
+
+  onProcedure () {
+    return new Promise((resolve, reject) => {
+      const buffer = Protocol.createOutboundFrame(2)
+      Protocol.onProcedure(buffer, 0)
+      Protocol.apply(buffer, Protocol.outboundFrameSize())
+
+      this.cbs.push({ time: Date.now(), ack: 'apply', resolve, reject })
+      this.transport.write(buffer)
+    })
+  }
+
+  offProcedure () {
+    return new Promise((resolve, reject) => {
+      const buffer = Protocol.createOutboundFrame(2)
+      Protocol.offProcedure(buffer, 0)
       Protocol.apply(buffer, Protocol.outboundFrameSize())
 
       this.cbs.push({ time: Date.now(), ack: 'apply', resolve, reject })
